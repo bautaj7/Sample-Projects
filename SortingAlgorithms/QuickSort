@@ -1,0 +1,110 @@
+package lab10;
+
+/**
+ * @author Jared Bauta
+ * This sample program will take an input of n integers
+ * and sort them using the QuickSort algorithm.
+ * Only the inputs and outputs are displayed.
+ * Intermediary results can be found with debugging console.
+ */
+
+import java.util.Random;
+import java.util.Scanner;
+
+public class QuickSort {
+
+	static int comparisons = 0;//holds the number of comparisons
+
+	
+	public static void main(String[] args){
+		Scanner in = new Scanner(System.in);
+
+		boolean running = true;
+		while (running){
+		System.out.print("Enter the size of the array.");
+		int n = Integer.parseInt(in.nextLine().trim());
+		System.out.println(n);
+		int[] unsortedArray = new int[n];
+		// this loop has the user fill the unsorted array
+		int i = 1;
+		while (i <= n) {
+			System.out.print("Enter integer number " + i + ": ");
+			int number = Integer.parseInt(in.nextLine().trim());
+			System.out.println(number);
+			unsortedArray[i - 1] = number;
+			i++;
+		} // end while
+
+		// Display unsorted array
+		System.out.println("Unsorted Array: ");
+		i = 0;
+		while (i < n) {
+			System.out.print(unsortedArray[i] + " ");
+			i++;
+		} // end while
+
+		//calls the recursive method to sort the array
+		sort(unsortedArray, 0, n - 1);
+		
+		// Display sorted array
+		System.out.println(" \nSorted Array: ");
+		i = 0;
+		while (i < n) {
+			System.out.print(unsortedArray[i] + " ");
+			i++;
+		} // end while
+		//Display the number of comparisons
+		System.out.println("\nNumber of comparisons: " + comparisons + ".");
+		
+		System.out.println("\nWould you like to run again? Enter 1 to run again and 0 to exit.");
+		System.out.print("Make your decision now: ");
+		int exit = Integer.parseInt(in.nextLine());
+		if (exit == 0) {
+			running = false;
+		} // end if
+		}//end while
+	}//end main
+	
+	//recursive method that calls until all items are sorted
+	public static void sort(int[] unsortedArray, int first, int last) {
+		//gets the location of the partitioned array
+		int partition = partition(unsortedArray, first, last);
+		if(first < partition - 1) {//partition is to the left
+			sort(unsortedArray, first, partition - 1);
+		}//end if
+		if(last > partition) {//partition is to the right
+			sort(unsortedArray, partition, last);
+		}//end if
+	} //end sort
+	
+	//sets the beginning of the partition that is used in sort
+	public static int partition(int[] unsortedArray, int first, int last) {
+		Random rand = new Random();
+		int newPivot = first + rand.nextInt(last - first);
+		int pivot =  unsortedArray[newPivot];//sets pivot to a random position within the partition
+		//swaps pivot with first item in partition
+		int temp = unsortedArray[first];
+		unsortedArray[first] = pivot;
+		unsortedArray[newPivot] = temp;
+		//iterates through the collection from both ends
+		while(first <= last) {
+			while(unsortedArray[first] < pivot) {//skips the item in first if it is less than the pivot value
+				first++;
+				comparisons++;
+			}//end while
+			while(unsortedArray[last] > pivot) {//skips the item in last if it is greater than the pivot value
+				last--;
+				comparisons++;
+			}//end while
+			if(first <= last) {//swaps first and last if needed
+				comparisons++;
+				temp = unsortedArray[first];
+				unsortedArray[first] = unsortedArray[last];
+				unsortedArray[last] = temp;
+				first++;
+				last--;
+			}//end if
+		}//end while
+		return first;
+	}//end partition
+}//end quicksort
