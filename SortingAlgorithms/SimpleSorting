@@ -1,0 +1,384 @@
+
+import java.util.Scanner;
+
+import java.math.*;
+
+/**
+ * @author Jared Bauta
+ * This sample program will take an input of n integers
+ * and sort them using 6 different sorting algorithms.
+ * Only the inputs and outputs are displayed.
+ * Intermediary results can be found with debugging console.
+ */
+
+public class SimpleSorting {
+
+	public static void main(String[] args) {
+		Scanner in = new Scanner(System.in);
+		boolean running = true;
+		boolean first = true; //used to ensure info only shows on startup
+		while (running) {
+			if (!first) {
+				System.out.println("Enter 0 to run again.");
+				System.out.println("Enter 1 to exit.");
+				System.out.print("Make your selection now.");
+				int input = Integer.parseInt(in.nextLine().trim());
+				if (input == 1) {// exits loop
+					break;
+				} // end if
+			} // end if
+			System.out.print("Now creating unsorted array. Enter the number of items in the array: ");
+			int numitems = Integer.parseInt(in.nextLine().trim());
+			System.out.println(numitems);
+			int[] unsortedArray = new int[numitems];
+			// this loop has the user fill the unsorted array
+			int i = 1;
+			while (i <= numitems) {
+				System.out.print("Enter integer number " + i + ": ");
+				int number = Integer.parseInt(in.nextLine().trim());
+				System.out.println(number);
+				unsortedArray[i - 1] = number;
+				i++;
+			} // end while
+			final int[] temp = unsortedArray;
+
+			//Uses the bubble sort method to sort the data
+			System.out.println("Now sorting with Bubble Sort.");
+			System.out.println("Input data:");
+			System.out.println(toString(unsortedArray));
+			bubbleSort(unsortedArray);
+			System.out.println();
+			unsortedArray = temp;
+
+			//Uses the improved bubble sort method to sort the data
+			System.out.println("Now sorting with Improved Bubble Sort.");
+			System.out.println("Input data:");
+			System.out.println(toString(unsortedArray));
+			improvedBubbleSort(unsortedArray);
+			System.out.println();
+			unsortedArray = temp;
+			
+			//Uses the selection sort method to sort the data
+			System.out.println("Now sorting with Selection Sort.");
+			System.out.println("Input data:");
+			System.out.println(toString(unsortedArray));
+			selectionSort(unsortedArray);
+			System.out.println();
+			unsortedArray = temp;
+			
+			//Uses the improved selection sort method to sort the data
+			System.out.println("Now sorting with Improved Selection Sort.");
+			System.out.println("Input data:");
+			System.out.println(toString(unsortedArray));
+			improvedSelectionSort(unsortedArray);
+			System.out.println();
+			unsortedArray = temp;
+			
+			//Uses the insertion sort method to sort the data
+			System.out.println("Now sorting with Insertion Sort.");
+			System.out.println("Input data:");
+			System.out.println(toString(unsortedArray));
+			insertionSort(unsortedArray);
+			System.out.println();
+			unsortedArray = temp;
+			
+			//Uses the improved insertion sort method to sort the data
+			System.out.println("Now sorting with Improved Insertion Sort.");
+			System.out.println("Input data:");
+			System.out.println(toString(unsortedArray));
+			improvedInsertionSort(unsortedArray);
+			System.out.println();
+			unsortedArray = temp;
+			
+			System.out.println("--------------------------------------------------");
+
+			first = false;
+		} // end while
+
+	}// end main
+
+	public static int[] bubbleSort(int[] unsortedArray) {
+		int comparisons = 0;// increments every time a comparison is made
+		int swaps = 0;// increments every time a swap is made
+		int n = unsortedArray.length;
+		int passes = 0;// number of passes through the array
+		while (passes < n - 1) {// should make one pass for every integer in the
+								// array
+			int i = 0;
+			while (i < n - passes - 1) {
+				comparisons++;
+				if (unsortedArray[i] > unsortedArray[i + 1]) {// if current
+																// integer is
+																// greater than
+																// the next
+					// make swap
+					swaps++;
+					int temp = unsortedArray[i + 1];
+					unsortedArray[i + 1] = unsortedArray[i];
+					unsortedArray[i] = temp;
+				} // end if
+				i++;
+			} // end while
+			passes++;
+		} // end while
+
+		System.out.println("Output data:");
+		System.out.println(toString(unsortedArray));
+		System.out.println("Number of comparisons: " + comparisons);
+		System.out.println("Number of swaps: " + swaps);
+
+		return unsortedArray;
+	}// end bubbleSort
+
+	public static int[] improvedBubbleSort(int[] unsortedArray) {
+		int comparisons = 0;// increments every time a comparison is made
+		int swaps = 0;// increments every time a swap is made
+		int n = unsortedArray.length;
+		int passes = 0;// number of passes through the array
+		boolean exit = true;// will exit when no comparisons are made
+		while (passes < n - 1) {// should make one pass for every integer in the
+								// array
+			int i = 0;
+			exit = true;
+			while (i < n - 1) {
+				comparisons++;
+				if (unsortedArray[i] > unsortedArray[i + 1]) {// if current
+																// integer is
+																// greater than
+																// the next
+					// make swap
+					swaps++;
+					int temp = unsortedArray[i + 1];
+					unsortedArray[i + 1] = unsortedArray[i];
+					unsortedArray[i] = temp;
+					exit = false;
+				} // end if
+				i++;
+			} // end while
+			passes++;
+			if (exit) {
+				passes = n;// will exit the loop;
+			} // end if
+		} // end while
+
+		System.out.println("Output data:");
+		System.out.println(toString(unsortedArray));
+		System.out.println("Number of comparisons: " + comparisons);
+		System.out.println("Number of swaps: " + swaps);
+
+		return unsortedArray;
+	}// end improvedBubbleSort
+
+	public static int[] selectionSort(int[] unsortedArray) {
+		int comparisons = 0;// increments every time a comparison is made
+		int swaps = 0;// increments every time a swap is made
+		int sorted = 0;// number of integers that have been sorted
+		while (sorted < unsortedArray.length) {
+			int i = 0;
+			int largest = 0;// will hold position of largest integer
+			while (i < unsortedArray.length - sorted) {
+				comparisons++;
+				if (unsortedArray[i] > unsortedArray[largest]) {// current
+																// integer is
+																// greater than
+																// the marked
+																// largest
+																// integer
+					largest = i;// sets current position as new largest
+				} // end if
+				i++;
+			} // end while
+				// swapping
+			int temp = unsortedArray[largest];
+			unsortedArray[largest] = unsortedArray[unsortedArray.length - 1 - sorted];
+			unsortedArray[unsortedArray.length - 1 - sorted] = temp;
+			swaps++;
+			sorted++;
+		} // end while
+		System.out.println("Output data:");
+		System.out.println(toString(unsortedArray));
+		System.out.println("Number of comparisons: " + comparisons);
+		System.out.println("Number of swaps: " + swaps);
+
+		return unsortedArray;
+	}// end selectionSort
+
+	public static int[] improvedSelectionSort(int[] unsortedArray) {
+		int comparisons = 0;// increments every time a comparison is made
+		int swaps = 0;// increments every time a swap is made
+		int sorted = 0;// number of integers that have been sorted
+		boolean exit = true;
+		while (sorted < unsortedArray.length) {
+			int i = 0;
+			int largest = 0;// will hold position of largest integer
+			exit = true;
+			while ((i < unsortedArray.length - sorted)&&(exit)) {
+				comparisons++;
+				exit = false;
+				if (unsortedArray[i] > unsortedArray[largest]) {// current
+																// integer is
+																// greater than
+																// the marked
+																// largest
+																// integer
+					largest = i;// sets current position as new largest
+					exit = true;
+				} // end if
+				i++;
+			} // end while
+				// swapping
+			int temp = unsortedArray[largest];
+			unsortedArray[largest] = unsortedArray[unsortedArray.length - 1 - sorted];
+			unsortedArray[unsortedArray.length - 1 - sorted] = temp;
+			swaps++;
+			sorted++;
+		} // end while
+		System.out.println("Output data:");
+		System.out.println(toString(unsortedArray));
+		System.out.println("Number of comparisons: " + comparisons);
+		System.out.println("Number of swaps: " + swaps);
+
+		return unsortedArray;
+	}// end improved SelectionSort
+
+	// uses sequential search
+	public static int[] insertionSort(int[] unsortedArray) {
+		int n = unsortedArray.length;
+		int comparisons = 0;
+		int shifts = 0;// this method uses shifts instead of swaps
+		int sorted = 1; // start at 1 to leave first number in first position
+		while (sorted < n) {// exits when all numbers are sorted
+			int sk = unsortedArray[n - 1];// grabs last number
+			int index = sequentialSearch(unsortedArray, sk, sorted);// position
+																	// that
+																	// search
+																	// key
+																	// should be
+																	// placed
+			if (index < 0) {// negative index means should be placed at this
+							// position
+				index = -1 * index;
+			} // end if
+				// sequential search makes one comparison for each index
+				// position
+			comparisons += index + 1;
+			int i = n - 1;
+			// shifts everything after the insertion
+			while (i > index) {
+				shifts++;
+				unsortedArray[i] = unsortedArray[i - 1];
+				i--;
+			} // end while
+			unsortedArray[index] = sk;// sets grabbed to correct position
+			sorted++;
+		} // end while
+		System.out.println("Output data:");
+		System.out.println(toString(unsortedArray));
+		System.out.println("Number of comparisons: " + comparisons);
+		System.out.println("Number of shifts: " + shifts);
+
+		return unsortedArray;
+	}// end insertionSort
+
+	// uses binary search
+	public static int[] improvedInsertionSort(int[] unsortedArray) {
+		int n = unsortedArray.length;
+		int comparisons = 0;
+		int shifts = 0;// this method uses shifts instead of swaps
+		int sorted = 1; // start at 1 to leave first number in first position
+		while (sorted < n) {// exits when all numbers are sorted
+			int sk = unsortedArray[n - 1];// grabs last number
+			int index = binarySearch(unsortedArray, sk, sorted);// position that
+																// search key
+																// should be
+																// placed
+			if (index < 0) {// negative index means should be placed at this
+							// position
+				index = -1 * index;
+			} // end if
+				// always makes log2(n+1) comparisons
+			comparisons += log2(sorted);
+			int i = n - 1;
+			// shifts everything after the insertion
+			while (i > index) {
+				shifts++;
+				unsortedArray[i] = unsortedArray[i - 1];
+				i--;
+			} // end while
+			unsortedArray[index] = sk;// sets grabbed to correct position
+			sorted++;
+		} // end while
+		System.out.println("Output data:");
+		System.out.println(toString(unsortedArray));
+		System.out.println("Number of comparisons: " + comparisons);
+		System.out.println("Number of shifts: " + shifts);
+
+		return unsortedArray;
+	}// end improvedInsertionSort
+
+	public static String toString(int[] array) {
+		String arrayString = "";
+		int i = 0;
+		while (i < array.length) {
+			arrayString = arrayString + " " + array[i];
+			i++;
+		} // end while
+		arrayString.trim();
+		return arrayString;
+	}// end toString
+
+	// modified to only search subarray
+	public static int binarySearch(int[] unsortedArray, int sk, int sorted) {
+		int low = 0;
+		int high = sorted - 1;
+		int index = 0;
+		int mid = (low + high) / 2;
+		while (low < high) {
+			mid = (low + high) / 2;
+			int midKey = unsortedArray[mid];
+			if (sk <= midKey) {
+				high = mid;
+				low = high;// exits loop
+			} // end if
+			else {
+				low = mid + 1;
+				index = low;
+			} // end else
+		} // end while
+		return index;
+	}// end binarySearch
+
+	// modified to only search array in sorted subarray
+	public static int sequentialSearch(int[] unsortedArray, int sk, int sorted) {
+		int result = sorted;// initializes at an impossible index so if
+							// this is returned we know the search
+							// failed
+		int i = 0;
+		while (i <= sorted - 1) {
+			int ck = unsortedArray[i];
+			if (sk > ck) {
+				// advance
+				i++;
+			} // end if
+			else if (sk == ck) {
+				// stop(succ, index)
+				result = i;// returns position
+				i = sorted;// exits the loop
+			} // end if
+			else {
+				// stop(unsucc, index)
+				result = -1 * i;// returns position
+				i = sorted;// exits the loop
+			} // end else
+		} // end while
+
+		return result;
+	}// end sequentialSearch
+
+	// uses change of base formula so we can calculate log base 2
+	public static int log2(int sorted) {
+		double log2 = Math.log10((double) sorted) / Math.log10((double) 2);
+		return (int) log2;
+	}// end log2
+
+}// end SimpleSorting
